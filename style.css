@@ -1,3 +1,15 @@
+/* Colour sheme variables */
+:root {
+    /* https://coolors.co/333333-f1f2f2-595959-c57c78-b4cecb-85b5ae */
+    --dark-grey: #333333;
+    --white: #F1F2F2;
+    --silver: #A5A6A6;
+    --light-grey: #595959;
+    --light-red: #C57C78;
+    --blue-grey: #B4CECB;
+    --line-blue: #85B5AE;
+}
+
 html, body {
     margin: 0;
     height: 100%;
@@ -11,13 +23,14 @@ html, body {
 }
 
 #header {
-    background-color: blueviolet;
+    background-color: var(--light-grey);
     grid-row-start: 1;
     grid-row-end: 2;
+    color: var(--blue-grey);
 }
 
 #content {
-    background-color: brown;
+    background-color: var(--white);
     grid-row-start: 2;
     grid-row-end: 3;
     display: flex;
@@ -26,9 +39,18 @@ html, body {
 }
 
 #footer {
-    background-color: green;
+    background-color: var(--light-grey);
     grid-row-start: 3;
     grid-row-end: 4;
+    color: var(--blue-grey);
+}
+
+a:visited {
+    color: var(--light-red);
+}
+
+a:link {
+    color: var(--blue-grey);
 }
 
 #title, #github-link {
@@ -52,5 +74,12 @@ html, body {
 }
 
 .grid-cell {
-    border: 3px solid black;
+    border: 3px solid var(--dark-grey);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.material-icons-outlined.md-80 { 
+    font-size: 80px; 
 }
