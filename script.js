@@ -8,10 +8,28 @@
 
 // gameboard represents the tic-tac-toe board
 const gameboard = (() => {
-    const board = [0,0,0,0,0,0,0,0,0];
+    const board = [1,2,1,1,1,0,2,2,2];  //1 --> X, 2 --> O, 0 -> empty
 
     const renderBoard = () => {
-        // clear html board, loop through board arr, update html board
+        let htmlboard = document.querySelector("#gameboard");
+        let i = 0;
+        htmlboard.childNodes.forEach(cell => {
+            if(cell.className == "grid-cell") {
+                if(board[i] == 1) {
+                    cell.innerHTML = '<span class="material-icons-outlined md-80">close</span>';
+                }
+                else if(board[i] == 2) {
+                    cell.innerHTML = '<span class="material-icons-outlined md-80">circle</span>';
+                }
+                else if(board[i] == 0) {
+                    cell.innerHTML = '<span class="material-icons-outlined md-80"></span>';
+                }
+                else {
+                    cell.innerHTML = '<span class="material-icons-outlined md-80"></span>';
+                }
+                i++;
+            }
+        });
     };
 
     const checkWinCondition = () => {
@@ -80,3 +98,6 @@ const gameController = ((player1, player2) => {
 const playerFactory = (name, id) => {
     return {name, id}
 };
+
+console.log("About to render board");
+gameboard.renderBoard();
