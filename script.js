@@ -8,7 +8,9 @@
 
 // gameboard represents the tic-tac-toe board
 const gameboard = (() => {
-    const board = [1,2,1,1,1,0,2,2,2];  //1 --> X, 2 --> O, 0 -> empty
+    const board = [1,2,1,
+                   1,1,0,
+                   2,2,2];  //1 --> X, 2 --> O, 0 -> empty
 
     const renderBoard = () => {
         let htmlboard = document.querySelector("#gameboard");
@@ -16,16 +18,13 @@ const gameboard = (() => {
         htmlboard.childNodes.forEach(cell => {
             if(cell.className == "grid-cell") {
                 if(board[i] == 1) {
-                    // cell.innerHTML = '<span class="material-icons-outlined md-80">close</span>';
                     cell.firstChild.textContent = "close";
                 }
                 else if(board[i] == 2) {
-                    // cell.innerHTML = '<span class="material-icons-outlined md-80">circle</span>';
                     cell.firstChild.textContent = "circle";
                 }
                 else {
-                    // cell.innerHTML = '<span class="material-icons-outlined md-80"></span>';
-                    cell.firstChild.textContent = "test";
+                    cell.firstChild.textContent = "";
                 }
                 i++;
             }
@@ -88,7 +87,7 @@ const gameController = ((player1, player2) => {
         // add cells
         for(let i = 0; i < 9; i++) {
             let cell = document.createElement("div");
-            cell.setAttribute("id", "grid-cell");
+            cell.classList.add("grid-cell");
 
             let cellContent = document.createElement("span");
             cellContent.classList.add("material-icons-outlined");
