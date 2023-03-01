@@ -78,7 +78,33 @@ const gameController = ((player1, player2) => {
     }
 
     const checkForWinner = () => {
+        /*
+            Loop thru board
+                [0 0 0]
+                [0 0 x]
+                [0 x 0]
+        */
+       //check top left corner on up, right, diagonal for win
+        let gameWasWonBy = null;    //the winning symbol
+        const board = gameboard.getBoard();
 
+        for(let i = 0; i < 9; i += 3) {    //check for a row win
+            if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i]) {
+                gameWasWonBy = board[0 + i];
+            }
+        }
+
+        if(gameWasWonBy == null) {
+            return gameWasWonBy;
+        }
+
+        for(let i = 0; i < 9; i += 3) {    //check for a column win NOT DONE YET
+            if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i]) {
+                gameWasWonBy = board[0 + i];
+            }
+        }
+
+        //check for both diagonals
     }
 
     const setupBoard = () => {
