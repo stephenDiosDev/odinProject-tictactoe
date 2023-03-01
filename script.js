@@ -8,9 +8,9 @@
 
 // gameboard represents the tic-tac-toe board
 const gameboard = (() => {
-    const board = [1,2,1,
-                   1,1,0,
-                   2,2,2];  //1 --> X, 2 --> O, 0 -> empty
+    const board = [0,0,0,
+                   0,0,0,
+                   0,0,0];  //1 --> X, 2 --> O, 0 -> empty
 
     const renderBoard = () => {
         let htmlboard = document.querySelector("#gameboard");
@@ -59,7 +59,7 @@ const gameController = ((player1, player2) => {
             Render victory/loss screen
             End game
     */
-    const activePlayer = null;
+    let activePlayer = null;
     const board = null;
 
     const players = [];
@@ -74,7 +74,7 @@ const gameController = ((player1, player2) => {
     }
 
     const renderBoard = () => {
-        // gameboard.renderBoard();
+        gameboard.renderBoard();
     }
 
     const checkForWinner = () => {
@@ -83,6 +83,7 @@ const gameController = ((player1, player2) => {
 
     const setupBoard = () => {
         let htmlboard = document.querySelector("#gameboard");
+        activePlayer = players[0];
 
         // add cells
         for(let i = 0; i < 9; i++) {
@@ -99,7 +100,17 @@ const gameController = ((player1, player2) => {
                     If cell content is empty
                         Set the id based on the id of the current player
                 */
-               console.log(e);
+                        console.log(e.target.innerText);
+                if(e.target.innerText == "") {
+                    console.log(activePlayer);
+                    if(activePlayer.id == 1) {
+                        cellContent.textContent = "close";
+                    }
+                    else {
+                        cellContent.textContent = "circle";
+                    }
+                }
+                switchActivePlayer();
             });
 
             cell.appendChild(cellContent);
@@ -145,4 +156,4 @@ let game = gameController;
 game.addPlayers(player1, player2);
 game.setupBoard();
 console.log("About to render board");
-gameboard.renderBoard();
+game.renderBoard();
