@@ -17,7 +17,8 @@ html, body {
 
 #page {
     display: grid;
-    grid-template-rows: minmax(150px, 8%) minmax(600px, auto) minmax(150px, 8%);
+    /* grid-template-rows: minmax(150px, 8%) minmax(600px, auto) minmax(150px, 8%); */
+    grid-template-rows: 100px minmax(600px, auto) 100px;
     min-height: 100%;
     min-width: 100%
 }
@@ -34,8 +35,9 @@ html, body {
     grid-row-start: 2;
     grid-row-end: 3;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 #footer {
@@ -82,4 +84,43 @@ a:link {
 
 .material-icons-outlined.md-80 { 
     font-size: 80px; 
+}
+
+/* Victory message pop in animaion from:
+    https://codepen.io/alvarotrigo/pen/NWvQObB */
+#win-msg {
+    margin: 30px;
+}
+
+#win-msg > h2 {
+    animation: 3s anim-popin ease;
+    font-size: 40px;
+    /* display: none; */
+}
+
+@keyframes anim-popin {
+    0% {
+        color: var(--line-blue);
+        transform: scale(0);
+        opacity: 0;
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      }
+      25% {
+        color: var(--line-blue);
+        transform: scale(1.5);
+        opacity: 1;
+        text-shadow: 3px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+      50% {
+        color: var(--line-blue);
+        transform: scale(1);
+        opacity: 1;
+        text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
+      }
+      100% {
+        /* animate nothing to add pause at the end of animation */
+        transform: scale(1);
+        opacity: 1;
+        text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
+      }
 }

@@ -30,7 +30,8 @@ const gameboard = (() => {
             }
         });
     };
-
+// to do
+//      gameboard isn't being properly updated
     const checkWinCondition = () => {
 
     }
@@ -60,7 +61,7 @@ const gameController = ((player1, player2) => {
             End game
     */
     let activePlayer = null;
-    const board = null;
+    let board = gameboard();
 
     const players = [];
 
@@ -78,33 +79,40 @@ const gameController = ((player1, player2) => {
     }
 
     const checkForWinner = () => {
-        /*
-            Loop thru board
-                [0 0 0]
-                [0 0 x]
-                [0 x 0]
-        */
        //check top left corner on up, right, diagonal for win
-        let gameWasWonBy = null;    //the winning symbol
-        const board = gameboard.getBoard();
+       console.log("Checking for a winner...");
+        board = gameboard.getBoard();     //this is not being updated for some reason!
+        console.log("Board info: " + board);
 
         for(let i = 0; i < 9; i += 3) {    //check for a row win
             if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i]) {
-                gameWasWonBy = board[0 + i];
+                if(board[0 + i] != 0) {
+                    console.log("Player " + board[0 + i] + " has won via row!");
+                    return board[0 + i];
+                }
             }
         }
 
-        if(gameWasWonBy == null) {
-            return gameWasWonBy;
-        }
-
-        for(let i = 0; i < 9; i += 3) {    //check for a column win NOT DONE YET
-            if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i]) {
-                gameWasWonBy = board[0 + i];
+        for(let i = 0; i < 3; i++) {    //check for a column win
+            if(board[i] == board[i + 3] && board[i] == board[i + 6]) {
+                if(board[i] != 0) {
+                    console.log("Player " + board[i] + " has won via column!");
+                    return board[i];
+                }
             }
         }
 
         //check for both diagonals
+        if((board[0] == board[4] && board[0] == board[8]) || (board[6] == board[4] && board[6] == board[2])) {
+            if(board[0] != 0) {
+                console.log("Player " + board[0] + " has won via diagonal!");
+                return board[0];
+            }
+        }
+
+        console.log("No winner found!");
+
+        return -1;
     }
 
     const setupBoard = () => {
@@ -121,12 +129,8 @@ const gameController = ((player1, player2) => {
             cellContent.classList.add("md-80");
             cellContent.textContent = "test";
 
-            cell.addEventListener("mousedown", function(e) {
-                /*
-                    If cell content is empty
-                        Set the id based on the id of the current player
-                */
-                        console.log(e.target.innerText);
+            cell.addEventListener("mousedown", function(e) {    //update gameboard, also divs will prob need an id that matches to the index
+                // console.log(e.target.innerText);             //of the board array
                 if(e.target.innerText == "") {
                     console.log(activePlayer);
                     if(activePlayer.id == 1) {
@@ -135,6 +139,11 @@ const gameController = ((player1, player2) => {
                     else {
                         cellContent.textContent = "circle";
                     }
+                }
+                //check win condition
+                let winner = checkForWinner();
+                if(winner != -1) {    //winner has been found!
+                    renderWinLoss();
                 }
                 switchActivePlayer();
             });
@@ -156,8 +165,9 @@ const gameController = ((player1, player2) => {
 
     const getActivePlayer = () => activePlayer;
 
+    //make a "hidden" div appear with the winning player
     const renderWinLoss = () => {
-
+        alert("Player " + activePlayer.id + " has won!");
     }
 
     return {
