@@ -33,16 +33,48 @@ const gameboard = (() => {
 // to do
 //      gameboard isn't being properly updated
     const checkWinCondition = () => {
+        //check top left corner on up, right, diagonal for win
+        console.log("Checking for a winner...");
+        console.log("Board info: " + board);
 
+        for(let i = 0; i < 9; i += 3) {    //check for a row win
+            if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i] && board[0 + i] != 0) {
+                console.log("Player " + board[0 + i] + " has won via row!");
+                return board[0 + i];
+            }
+        }
+
+        for(let i = 0; i < 3; i++) {    //check for a column win
+            if(board[i] == board[i + 3] && board[i] == board[i + 6] && board[i] != 0) {
+                console.log("Player " + board[i] + " has won via column!");
+                return board[i];
+            }
+        }
+
+        //check for both diagonals
+        if((board[0] == board[4] && board[0] == board[8] && board[0] != 0) || (board[6] == board[4] && board[6] == board[2] && board[6] != 0)) {
+            console.log("Player " + board[0] + " has won via diagonal!");
+            return board[0];
+        }
+
+        console.log("No winner found!");
+
+        return -1;
     }
 
     const getBoard = () => {
         return board;
     }
 
+    const setCell = (index, symbol) => {
+        board[index] = symbol;
+    }
+
     return {
         renderBoard,
-        getBoard
+        getBoard,
+        checkWinCondition,
+        setCell
     };
 })();
 
@@ -61,7 +93,7 @@ const gameController = ((player1, player2) => {
             End game
     */
     let activePlayer = null;
-    let board = gameboard();
+    let board = gameboard;
 
     const players = [];
 
@@ -79,40 +111,7 @@ const gameController = ((player1, player2) => {
     }
 
     const checkForWinner = () => {
-       //check top left corner on up, right, diagonal for win
-       console.log("Checking for a winner...");
-        board = gameboard.getBoard();     //this is not being updated for some reason!
-        console.log("Board info: " + board);
-
-        for(let i = 0; i < 9; i += 3) {    //check for a row win
-            if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i]) {
-                if(board[0 + i] != 0) {
-                    console.log("Player " + board[0 + i] + " has won via row!");
-                    return board[0 + i];
-                }
-            }
-        }
-
-        for(let i = 0; i < 3; i++) {    //check for a column win
-            if(board[i] == board[i + 3] && board[i] == board[i + 6]) {
-                if(board[i] != 0) {
-                    console.log("Player " + board[i] + " has won via column!");
-                    return board[i];
-                }
-            }
-        }
-
-        //check for both diagonals
-        if((board[0] == board[4] && board[0] == board[8]) || (board[6] == board[4] && board[6] == board[2])) {
-            if(board[0] != 0) {
-                console.log("Player " + board[0] + " has won via diagonal!");
-                return board[0];
-            }
-        }
-
-        console.log("No winner found!");
-
-        return -1;
+       return board.checkWinCondition()
     }
 
     const setupBoard = () => {
@@ -123,6 +122,7 @@ const gameController = ((player1, player2) => {
         for(let i = 0; i < 9; i++) {
             let cell = document.createElement("div");
             cell.classList.add("grid-cell");
+            cell.dataset.index = i;
 
             let cellContent = document.createElement("span");
             cellContent.classList.add("material-icons-outlined");
@@ -131,6 +131,7 @@ const gameController = ((player1, player2) => {
 
             cell.addEventListener("mousedown", function(e) {    //update gameboard, also divs will prob need an id that matches to the index
                 // console.log(e.target.innerText);             //of the board array
+                console.log(e.target);
                 if(e.target.innerText == "") {
                     console.log(activePlayer);
                     if(activePlayer.id == 1) {
@@ -139,6 +140,8 @@ const gameController = ((player1, player2) => {
                     else {
                         cellContent.textContent = "circle";
                     }
+
+                    board.setCell(e.target.dataset.index, activePlayer.id)
                 }
                 //check win condition
                 let winner = checkForWinner();
