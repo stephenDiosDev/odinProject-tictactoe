@@ -170,7 +170,10 @@ const gameController = ((player1, player2) => {
 
     //make a "hidden" div appear with the winning player
     const renderWinLoss = () => {
-        alert("Player " + activePlayer.id + " has won!");
+       let winMessage = document.querySelector("#win-msg > h2");
+       winMessage.textContent = "Player " + activePlayer.id + " wins!";
+       winMessage.style.animation = "2s anim-popin 100ms ease forwards";
+       winMessage.style.display = "inline";
     }
 
     return {
