@@ -182,7 +182,7 @@ const gameController = ((player1, player2) => {
             winMessage.textContent = "Player " + activePlayer.id + " wins!";
        }
        else {
-        winMessage.textContent = "It's a tie!";
+            winMessage.textContent = "It's a tie!";
        }
        
        winMessage.style.animation = "2s anim-popin 100ms ease forwards";

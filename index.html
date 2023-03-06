@@ -19,9 +19,25 @@
             </div>
         </div>
         <div id="content">
-            <div id="gameboard"></div>
-            <div id="win-msg">
-                <h2>Congratulations!</h2>
+            <div class="player-card player1">
+                <input type="text" name="player1-name" id="player1-name" placeholder="Player 1 Name...">
+                <span class="material-icons-outlined md-80">close</span>
+                <p id="player1-score">7 points</p>
+            </div>
+            <div id="board-wrapper">
+                <div id="gameboard"></div>
+                <div id="game-controls">
+                    <button id="start">Start</button>
+                    <button id="reset">Reset</button>
+                </div>
+                <div id="win-msg">
+                    <h2>Congratulations!</h2>
+                </div>
+            </div>
+            <div class="player-card player2">
+                <input type="text" name="player2-name" id="player2-name" placeholder="Player 2 Name...">
+                <span class="material-icons-outlined md-80">circle</span>
+                <p id="player2-score">3 points</p>
             </div>
         </div>
         <div id="footer">
