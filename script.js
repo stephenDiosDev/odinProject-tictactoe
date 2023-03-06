@@ -1,17 +1,17 @@
 // gameboard represents the tic-tac-toe board
 const gameboard = (() => {
-    const board = [0,0,0,
-                   0,0,0,
-                   0,0,0];  //1 --> X, 2 --> O, 0 -> empty
+    const board = [0, 0, 0,
+        0, 0, 0,
+        0, 0, 0];  //1 --> X, 2 --> O, 0 -> empty
 
     const renderBoard = () => {
         let htmlboard = document.getElementsByClassName("grid-cell");
         console.log(htmlboard);
-        for(let i = 0; i < htmlboard.length; i++) {
-            if(board[i] == 1) {
+        for (let i = 0; i < htmlboard.length; i++) {
+            if (board[i] == 1) {
                 htmlboard[i].firstChild.textContent = "close";
             }
-            else if(board[i] == 2) {
+            else if (board[i] == 2) {
                 htmlboard[i].firstChild.textContent = "circle";
             }
             else {
@@ -26,8 +26,8 @@ const gameboard = (() => {
     const setBorders = () => {
         let htmlboard = document.getElementsByClassName("grid-cell");
         //set full borders on corner cells
-        for(let i = 0; i < 9; i += 2) {
-            if(i != 4) {
+        for (let i = 0; i < 9; i += 2) {
+            if (i != 4) {
                 htmlboard[i].style = "border: 3px solid var(--dark-grey);";
             }
         }
@@ -50,27 +50,27 @@ const gameboard = (() => {
     const checkWinCondition = () => {
         //check top left corner on up, right, diagonal for win
 
-        for(let i = 0; i < 9; i += 3) {    //check for a row win
-            if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i] && board[0 + i] != 0) {
+        for (let i = 0; i < 9; i += 3) {    //check for a row win
+            if (board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i] && board[0 + i] != 0) {
                 return board[0 + i];
             }
         }
 
-        for(let i = 0; i < 3; i++) {    //check for a column win
-            if(board[i] == board[i + 3] && board[i] == board[i + 6] && board[i] != 0) {
+        for (let i = 0; i < 3; i++) {    //check for a column win
+            if (board[i] == board[i + 3] && board[i] == board[i + 6] && board[i] != 0) {
                 return board[i];
             }
         }
 
         //check for both diagonals
-        if((board[0] == board[4] && board[0] == board[8] && board[0] != 0) || (board[6] == board[4] && board[6] == board[2] && board[6] != 0)) {
+        if ((board[0] == board[4] && board[0] == board[8] && board[0] != 0) || (board[6] == board[4] && board[6] == board[2] && board[6] != 0)) {
             return board[0];
         }
 
         //check for ties, no winner + full board
-        for(let i = 0; i < 9; i++) {
-            if(board[i] == 0) {     //empty cell found
-                return -1; 
+        for (let i = 0; i < 9; i++) {
+            if (board[i] == 0) {     //empty cell found
+                return -1;
             }
         }
 
@@ -86,7 +86,7 @@ const gameboard = (() => {
     }
 
     const reset = () => {
-        for(let i = 0; i < 9; i++) {
+        for (let i = 0; i < 9; i++) {
             board[i] = 0;
         }
     }
@@ -133,13 +133,13 @@ const gameController = ((player1, player2) => {
     }
 
     const checkForWinner = () => {
-       return board.checkWinCondition();
+        return board.checkWinCondition();
     }
 
     function inputHandler(cell, cellContent) {
         return function listener(e) {                    //of the board array
-            if(e.target.innerText == "") {
-                if(activePlayer.id == 1) {
+            if (e.target.innerText == "") { //only process turn if empty place is clicked
+                if (activePlayer.id == 1) {
                     cellContent.textContent = "close";
                     cellContent.style.color = "var(--line-blue)";
                 }
@@ -149,19 +149,20 @@ const gameController = ((player1, player2) => {
                 }
 
                 board.setCell(e.target.dataset.index, activePlayer.id)
-            }
-            //check win condition
-            let winner = checkForWinner();
-            if(winner != -1) {    //winner has been found, or its a tie!
-                let replacementBoard = document.getElementById("gameboard");
-                //erase event listeners
-                replacementBoard.replaceWith(replacementBoard.cloneNode(true));
-                if(winner != 3) {       //3 indicates tie, 1 or 2 is a player win
-                    activePlayer.score += 1;
+
+                //check win condition
+                let winner = checkForWinner();
+                if (winner != -1) {    //winner has been found, or its a tie!
+                    let replacementBoard = document.getElementById("gameboard");
+                    //erase event listeners
+                    replacementBoard.replaceWith(replacementBoard.cloneNode(true));
+                    if (winner != 3) {       //3 indicates tie, 1 or 2 is a player win
+                        activePlayer.score += 1;
+                    }
+                    renderWinLoss(winner);
                 }
-                renderWinLoss(winner);
+                switchActivePlayer();
             }
-            switchActivePlayer();
         }
     }
 
@@ -173,11 +174,11 @@ const gameController = ((player1, player2) => {
         let player1Name = "Player 1";
         let player2Name = "Player 2";
 
-        if(player1NameInput.value != "") {
+        if (player1NameInput.value != "") {
             player1Name = player1NameInput.value;
         }
 
-        if(player2NameInput.value != "") {
+        if (player2NameInput.value != "") {
             player2Name = player2NameInput.value;
         }
 
@@ -207,7 +208,7 @@ const gameController = ((player1, player2) => {
         activePlayer = players[0];
 
         // add cells
-        for(let i = 0; i < 9; i++) {
+        for (let i = 0; i < 9; i++) {
             let cell = document.createElement("div");
             cell.classList.add("grid-cell");
             cell.dataset.index = i;
@@ -236,7 +237,7 @@ const gameController = ((player1, player2) => {
     }
 
     const switchActivePlayer = () => {
-        if(getActivePlayer() === players[0]) {
+        if (getActivePlayer() === players[0]) {
             activePlayer = players[1]
         }
         else {
@@ -252,15 +253,15 @@ const gameController = ((player1, player2) => {
         let p1Card = content[0];
         let p2Card = content[2];
 
-        if(gameStartFlag) {     //only animate p1 card
+        if (gameStartFlag) {     //only animate p1 card
             p1Card.style.animation = "0.1s player1card linear forwards";
         }
         else {
-            if(activePlayer.id == 1) {
+            if (activePlayer.id == 1) {
                 p2Card.style.animation = "0.1s player2card linear reverse forwards";
                 p1Card.style.animation = "0.1s player1card linear forwards";
             }
-            else if(activePlayer.id == 2) {
+            else if (activePlayer.id == 2) {
                 p2Card.style.animation = "0.1s player2card linear forwards";
                 p1Card.style.animation = "0.1s player1card linear reverse forwards";
             }
@@ -293,22 +294,22 @@ const gameController = ((player1, player2) => {
     //make a "hidden" div appear with the winning player
     const renderWinLoss = (winnerID) => {
         //display winning player name
-       let winMessage = document.querySelector("#win-msg > h2");
+        let winMessage = document.querySelector("#win-msg > h2");
 
-       if(winnerID != 3) {
+        if (winnerID != 3) {
             let winnerName = players[activePlayer.id - 1].name;
             winMessage.textContent = winnerName + " wins!";
-       }
-       else {
+        }
+        else {
             winMessage.textContent = "It's a tie!";
-       }
-       
-       winMessage.style.animation = "2s anim-popin 100ms ease forwards";
-       winMessage.style.display = "inline";
+        }
 
-       if(winnerID != 3) {
+        winMessage.style.animation = "2s anim-popin 100ms ease forwards";
+        winMessage.style.display = "inline";
+
+        if (winnerID != 3) {
             setScoreBoard(players[0].score, players[1].score);
-       }
+        }
     }
 
     return {
@@ -324,5 +325,5 @@ const gameController = ((player1, player2) => {
 })();
 
 const playerFactory = (name, id, score) => {
-    return {name, id, score}
+    return { name, id, score }
 };
