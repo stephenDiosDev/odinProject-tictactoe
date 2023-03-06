@@ -23,6 +23,9 @@ const gameboard = (() => {
         });
     };
 
+    //1: player 1 win
+    //2: player 2 win
+    //3: tie
     const checkWinCondition = () => {
         //check top left corner on up, right, diagonal for win
         console.log("Checking for a winner...");
@@ -48,9 +51,16 @@ const gameboard = (() => {
             return board[0];
         }
 
-        console.log("No winner found!");
+        console.log("No winner found, checking for ties");
 
-        return -1;
+        //check for ties, no winner + full board
+        for(let i = 0; i < 9; i++) {
+            if(board[i] == 0) {     //empty cell found
+                return -1; 
+            }
+        }
+
+        return 3;
     }
 
     const getBoard = () => {
@@ -121,10 +131,10 @@ const gameController = ((player1, player2) => {
             }
             //check win condition
             let winner = checkForWinner();
-            if(winner != -1) {    //winner has been found!
+            if(winner != -1) {    //winner has been found, or its a tie!
                 let replacementBoard = document.getElementById("gameboard");
                 replacementBoard.replaceWith(replacementBoard.cloneNode(true));
-                renderWinLoss();
+                renderWinLoss(winner);
             }
             switchActivePlayer();
         }
@@ -165,9 +175,16 @@ const gameController = ((player1, player2) => {
     const getActivePlayer = () => activePlayer;
 
     //make a "hidden" div appear with the winning player
-    const renderWinLoss = () => {
+    const renderWinLoss = (winnerID) => {
        let winMessage = document.querySelector("#win-msg > h2");
-       winMessage.textContent = "Player " + activePlayer.id + " wins!";
+
+       if(winnerID != 3) {
+            winMessage.textContent = "Player " + activePlayer.id + " wins!";
+       }
+       else {
+        winMessage.textContent = "It's a tie!";
+       }
+       
        winMessage.style.animation = "2s anim-popin 100ms ease forwards";
        winMessage.style.display = "inline";
     }
