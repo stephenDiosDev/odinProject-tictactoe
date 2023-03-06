@@ -89,11 +89,18 @@ const gameboard = (() => {
         board[index] = symbol;
     }
 
+    const reset = () => {
+        for(let i = 0; i < 9; i++) {
+            board[i] = 0;
+        }
+    }
+
     return {
         renderBoard,
         getBoard,
         checkWinCondition,
-        setCell
+        setCell,
+        reset
     };
 })();
 
@@ -149,15 +156,18 @@ const gameController = ((player1, player2) => {
             let winner = checkForWinner();
             if(winner != -1) {    //winner has been found, or its a tie!
                 let replacementBoard = document.getElementById("gameboard");
+                //erase event listeners
                 replacementBoard.replaceWith(replacementBoard.cloneNode(true));
-                activePlayer.score += 1;
+                if(winner != 3) {       //3 indicates tie, 1 or 2 is a player win
+                    activePlayer.score += 1;
+                }
                 renderWinLoss(winner);
             }
             switchActivePlayer();
         }
     }
 
-    function startGame() {
+    function startGame(p1Score, p2Score) {
         //check for custom names
         let player1NameInput = document.getElementById("player1-name");
         let player2NameInput = document.getElementById("player2-name");
@@ -181,8 +191,10 @@ const gameController = ((player1, player2) => {
         document.getElementById("player2-name-banner").innerHTML = player2Name;
 
         //create players
-        let player1 = playerFactory(player1Name, 1, 0);
-        let player2 = playerFactory(player2Name, 2, 0);
+        let player1 = playerFactory(player1Name, 1, p1Score);
+        let player2 = playerFactory(player2Name, 2, p2Score);
+
+        setScoreBoard(p1Score, p2Score);
 
         let game = gameController;
         game.addPlayers(player1, player2);
@@ -194,6 +206,7 @@ const gameController = ((player1, player2) => {
 
     const setupBoard = () => {
         let htmlboard = document.querySelector("#gameboard");
+        htmlboard.innerHTML = null;
         activePlayer = players[0];
 
         // add cells
@@ -215,6 +228,15 @@ const gameController = ((player1, player2) => {
         gameboard.renderBoard();
     }
 
+    //when the reset button is pushed to play again
+    function resetBoard() {
+        //clear gameboard
+        board.reset();
+        resetVictoryBanner();
+        renderBoard();
+        startGame(players[0].score, players[1].score);
+    }
+
     const switchActivePlayer = () => {
         if(getActivePlayer() === players[0]) {
             activePlayer = players[1]
@@ -225,6 +247,20 @@ const gameController = ((player1, player2) => {
     }
 
     const getActivePlayer = () => activePlayer;
+
+    const setScoreBoard = (p1, p2) => {
+        let p1Score = document.getElementsByClassName("player-card")[0].children[3];
+        p1Score.innerText = p1 + " points";
+
+        let p2Score = document.getElementsByClassName("player-card")[1].children[3];
+        p2Score.innerText = p2 + " points";
+    }
+
+    const resetVictoryBanner = () => {
+        let winMessage = document.querySelector("#win-msg > h2");
+        winMessage.textContent = "";
+        winMessage.style.display = "none";
+    }
 
     //make a "hidden" div appear with the winning player
     const renderWinLoss = (winnerID) => {
@@ -243,8 +279,7 @@ const gameController = ((player1, player2) => {
        winMessage.style.display = "inline";
 
        if(winnerID != 3) {
-            let winnerScore = document.getElementsByClassName("player-card")[winnerID - 1].children[3];
-            winnerScore.innerText = players[winnerID - 1].score + " points";
+            setScoreBoard(players[0].score, players[1].score);
        }
     }
 
@@ -253,7 +288,8 @@ const gameController = ((player1, player2) => {
         setupBoard,
         renderBoard,
         processTurn,
-        startGame
+        startGame,
+        resetBoard
     }
 
 
