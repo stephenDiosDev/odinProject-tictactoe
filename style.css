@@ -135,8 +135,8 @@ a:link {
     font-size: 25px;
 }
 
+/* Border for cells is set in the JS setBorders function */
 .grid-cell {
-    border: 3px solid var(--dark-grey);
     display: flex;
     justify-content: center;
     align-items: center;

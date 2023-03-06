@@ -5,23 +5,45 @@ const gameboard = (() => {
                    0,0,0];  //1 --> X, 2 --> O, 0 -> empty
 
     const renderBoard = () => {
-        let htmlboard = document.querySelector("#gameboard");
-        let i = 0;
-        htmlboard.childNodes.forEach(cell => {
-            if(cell.className == "grid-cell") {
-                if(board[i] == 1) {
-                    cell.firstChild.textContent = "close";
-                }
-                else if(board[i] == 2) {
-                    cell.firstChild.textContent = "circle";
-                }
-                else {
-                    cell.firstChild.textContent = "";
-                }
-                i++;
+        let htmlboard = document.getElementsByClassName("grid-cell");
+        
+        for(let i = 0; i < htmlboard.length; i++) {
+            console.log(">>> rendering childnode");
+            console.log(htmlboard[i]);
+            if(board[i] == 1) {
+                htmlboard[i].firstChild.textContent = "close";
             }
-        });
+            else if(board[i] == 2) {
+                htmlboard[i].firstChild.textContent = "circle";
+            }
+            else {
+                htmlboard[i].firstChild.textContent = "";
+            }
+        }
+
+        setBorders();
     };
+
+    const setBorders = () => {
+        let htmlboard = document.getElementsByClassName("grid-cell");
+        //set full borders on corner cells
+        for(let i = 0; i < 9; i += 2) {
+            if(i != 4) {
+                htmlboard[i].style = "border: 3px solid var(--dark-grey);";
+            }
+        }
+
+        //top middle cell
+        htmlboard[1].style = "border-top: 3px solid var(--dark-grey); border-bottom: 3px solid var(--dark-grey);";
+        //left middle cell
+        htmlboard[3].style = "border-left: 3px solid var(--dark-grey); border-right: 3px solid var(--dark-grey);";
+
+        //right middle cell
+        htmlboard[5].style = "border-left: 3px solid var(--dark-grey); border-right: 3px solid var(--dark-grey);";
+
+        //bottom middle cell
+        htmlboard[7].style = "border-top: 3px solid var(--dark-grey); border-bottom: 3px solid var(--dark-grey);";
+    }
 
     //1: player 1 win
     //2: player 2 win
