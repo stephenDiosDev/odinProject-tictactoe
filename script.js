@@ -8,8 +8,6 @@ const gameboard = (() => {
         let htmlboard = document.getElementsByClassName("grid-cell");
         
         for(let i = 0; i < htmlboard.length; i++) {
-            console.log(">>> rendering childnode");
-            console.log(htmlboard[i]);
             if(board[i] == 1) {
                 htmlboard[i].firstChild.textContent = "close";
             }
@@ -22,7 +20,12 @@ const gameboard = (() => {
         }
 
         setBorders();
+        setScores();
     };
+
+    const setScores = () => {
+
+    }
 
     const setBorders = () => {
         let htmlboard = document.getElementsByClassName("grid-cell");
@@ -50,30 +53,23 @@ const gameboard = (() => {
     //3: tie
     const checkWinCondition = () => {
         //check top left corner on up, right, diagonal for win
-        console.log("Checking for a winner...");
-        console.log("Board info: " + board);
 
         for(let i = 0; i < 9; i += 3) {    //check for a row win
             if(board[0 + i] == board[1 + i] && board[0 + i] == board[2 + i] && board[0 + i] != 0) {
-                console.log("Player " + board[0 + i] + " has won via row!");
                 return board[0 + i];
             }
         }
 
         for(let i = 0; i < 3; i++) {    //check for a column win
             if(board[i] == board[i + 3] && board[i] == board[i + 6] && board[i] != 0) {
-                console.log("Player " + board[i] + " has won via column!");
                 return board[i];
             }
         }
 
         //check for both diagonals
         if((board[0] == board[4] && board[0] == board[8] && board[0] != 0) || (board[6] == board[4] && board[6] == board[2] && board[6] != 0)) {
-            console.log("Player " + board[0] + " has won via diagonal!");
             return board[0];
         }
-
-        console.log("No winner found, checking for ties");
 
         //check for ties, no winner + full board
         for(let i = 0; i < 9; i++) {
@@ -138,10 +134,8 @@ const gameController = ((player1, player2) => {
     }
 
     function inputHandler(cell, cellContent) {
-        return function listener(e) {
-            console.log(e.target);                          //of the board array
+        return function listener(e) {                    //of the board array
             if(e.target.innerText == "") {
-                console.log(activePlayer);
                 if(activePlayer.id == 1) {
                     cellContent.textContent = "close";
                 }
@@ -156,10 +150,44 @@ const gameController = ((player1, player2) => {
             if(winner != -1) {    //winner has been found, or its a tie!
                 let replacementBoard = document.getElementById("gameboard");
                 replacementBoard.replaceWith(replacementBoard.cloneNode(true));
+                activePlayer.score += 1;
                 renderWinLoss(winner);
             }
             switchActivePlayer();
         }
+    }
+
+    function startGame() {
+        //check for custom names
+        let player1NameInput = document.getElementById("player1-name");
+        let player2NameInput = document.getElementById("player2-name");
+
+        let player1Name = "Player 1";
+        let player2Name = "Player 2";
+
+        if(player1NameInput.value != "") {
+            player1Name = player1NameInput.value;
+        }
+
+        if(player2NameInput.value != "") {
+            player2Name = player2NameInput.value;
+        }
+
+        //disable name fields
+        player1NameInput.setAttribute("disabled", "true");
+        player2NameInput.setAttribute("disabled", "true");
+
+        document.getElementById("player1-name-banner").innerHTML = player1Name;
+        document.getElementById("player2-name-banner").innerHTML = player2Name;
+
+        //create players
+        let player1 = playerFactory(player1Name, 1, 0);
+        let player2 = playerFactory(player2Name, 2, 0);
+
+        let game = gameController;
+        game.addPlayers(player1, player2);
+        game.setupBoard();
+        game.renderBoard();
     }
 
     const setupBoard = () => {
@@ -201,7 +229,8 @@ const gameController = ((player1, player2) => {
        let winMessage = document.querySelector("#win-msg > h2");
 
        if(winnerID != 3) {
-            winMessage.textContent = "Player " + activePlayer.id + " wins!";
+            let winnerName = players[activePlayer.id - 1].name;
+            winMessage.textContent = winnerName + " wins!";
        }
        else {
             winMessage.textContent = "It's a tie!";
@@ -209,28 +238,30 @@ const gameController = ((player1, player2) => {
        
        winMessage.style.animation = "2s anim-popin 100ms ease forwards";
        winMessage.style.display = "inline";
+
+       players[winnerID - 1] += 1;
+       let winnerScore = null;
+       if(winnerID == 1) {
+        winnerScore = document.querySelector("player-card player1 > p");
+       }
+       else if(winnerID == 2) {
+        winnerScore = document.querySelector("player-card player2 > p");
+       }
+
+       winnerScore.textContent = (players[winnerID - 1]).toString();
     }
 
     return {
         addPlayers,
         setupBoard,
         renderBoard,
-        processTurn
+        processTurn,
+        startGame
     }
 
 
 })();
 
-const playerFactory = (name, id) => {
-    return {name, id}
+const playerFactory = (name, id, score) => {
+    return {name, id, score}
 };
-
-
-let player1 = playerFactory("player1", 1);
-let player2 = playerFactory("player2", 2);
-
-let game = gameController;
-game.addPlayers(player1, player2);
-game.setupBoard();
-console.log("About to render board");
-game.renderBoard();
