@@ -1,11 +1,3 @@
-/*
-    Gameboard module
-
-    Player factory
-
-    Control flow module
-*/
-
 // gameboard represents the tic-tac-toe board
 const gameboard = (() => {
     const board = [0,0,0,
@@ -30,8 +22,7 @@ const gameboard = (() => {
             }
         });
     };
-// to do
-//      gameboard isn't being properly updated
+
     const checkWinCondition = () => {
         //check top left corner on up, right, diagonal for win
         console.log("Checking for a winner...");
@@ -111,7 +102,32 @@ const gameController = ((player1, player2) => {
     }
 
     const checkForWinner = () => {
-       return board.checkWinCondition()
+       return board.checkWinCondition();
+    }
+
+    function inputHandler(cell, cellContent) {
+        return function listener(e) {
+            console.log(e.target);                          //of the board array
+            if(e.target.innerText == "") {
+                console.log(activePlayer);
+                if(activePlayer.id == 1) {
+                    cellContent.textContent = "close";
+                }
+                else {
+                    cellContent.textContent = "circle";
+                }
+
+                board.setCell(e.target.dataset.index, activePlayer.id)
+            }
+            //check win condition
+            let winner = checkForWinner();
+            if(winner != -1) {    //winner has been found!
+                let replacementBoard = document.getElementById("gameboard");
+                replacementBoard.replaceWith(replacementBoard.cloneNode(true));
+                renderWinLoss();
+            }
+            switchActivePlayer();
+        }
     }
 
     const setupBoard = () => {
@@ -129,27 +145,7 @@ const gameController = ((player1, player2) => {
             cellContent.classList.add("md-80");
             cellContent.textContent = "test";
 
-            cell.addEventListener("mousedown", function(e) {    //update gameboard, also divs will prob need an id that matches to the index
-                // console.log(e.target.innerText);             //of the board array
-                console.log(e.target);
-                if(e.target.innerText == "") {
-                    console.log(activePlayer);
-                    if(activePlayer.id == 1) {
-                        cellContent.textContent = "close";
-                    }
-                    else {
-                        cellContent.textContent = "circle";
-                    }
-
-                    board.setCell(e.target.dataset.index, activePlayer.id)
-                }
-                //check win condition
-                let winner = checkForWinner();
-                if(winner != -1) {    //winner has been found!
-                    renderWinLoss();
-                }
-                switchActivePlayer();
-            });
+            cell.addEventListener("mousedown", inputHandler(cell, cellContent), false);
 
             cell.appendChild(cellContent);
             htmlboard.appendChild(cell);
