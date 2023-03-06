@@ -6,7 +6,7 @@ const gameboard = (() => {
 
     const renderBoard = () => {
         let htmlboard = document.getElementsByClassName("grid-cell");
-        
+        console.log(htmlboard);
         for(let i = 0; i < htmlboard.length; i++) {
             if(board[i] == 1) {
                 htmlboard[i].firstChild.textContent = "close";
@@ -20,12 +20,8 @@ const gameboard = (() => {
         }
 
         setBorders();
-        setScores();
     };
 
-    const setScores = () => {
-
-    }
 
     const setBorders = () => {
         let htmlboard = document.getElementsByClassName("grid-cell");
@@ -145,9 +141,11 @@ const gameController = ((player1, player2) => {
             if(e.target.innerText == "") {
                 if(activePlayer.id == 1) {
                     cellContent.textContent = "close";
+                    cellContent.style.color = "var(--line-blue)";
                 }
                 else {
                     cellContent.textContent = "circle";
+                    cellContent.style.color = "var(--light-red)";
                 }
 
                 board.setCell(e.target.dataset.index, activePlayer.id)
@@ -200,8 +198,7 @@ const gameController = ((player1, player2) => {
         game.addPlayers(player1, player2);
         game.setupBoard();
         game.renderBoard();
-        console.log("Players: ");
-        console.log(players);
+        renderActivePlayerCard(true);
     }
 
     const setupBoard = () => {
@@ -232,6 +229,7 @@ const gameController = ((player1, player2) => {
     function resetBoard() {
         //clear gameboard
         board.reset();
+        resetActivePlayerCardAnimation();
         resetVictoryBanner();
         renderBoard();
         startGame(players[0].score, players[1].score);
@@ -244,6 +242,36 @@ const gameController = ((player1, player2) => {
         else {
             activePlayer = players[0]
         }
+
+        renderActivePlayerCard(false);
+    }
+
+    const renderActivePlayerCard = (gameStartFlag) => {
+        let content = document.getElementById("content").children;
+        //reset animations on both cards
+        let p1Card = content[0];
+        let p2Card = content[2];
+
+        if(gameStartFlag) {     //only animate p1 card
+            p1Card.style.animation = "0.1s player1card linear forwards";
+        }
+        else {
+            if(activePlayer.id == 1) {
+                p2Card.style.animation = "0.1s player2card linear reverse forwards";
+                p1Card.style.animation = "0.1s player1card linear forwards";
+            }
+            else if(activePlayer.id == 2) {
+                p2Card.style.animation = "0.1s player2card linear forwards";
+                p1Card.style.animation = "0.1s player1card linear reverse forwards";
+            }
+        }
+    }
+
+    const resetActivePlayerCardAnimation = () => {
+        let content = document.getElementById("content").children;
+        //reset animations on both cards
+        content[0].style.animation = "0.1s player1card linear reverse forwards";
+        content[2].style.animation = "0.1s player2card linear reverse forwards";
     }
 
     const getActivePlayer = () => activePlayer;

@@ -158,6 +158,36 @@ a:link {
     color: var(--white);
 }
 
+@keyframes player1card {
+    0% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px var(--line-blue);
+    }
+    100% {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px var(--line-blue);
+    }
+}
+
+@keyframes player2card {
+    0% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px var(--light-red);
+    }
+    100% {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px var(--light-red);
+    }
+}
+
 @keyframes anim-popin {
     0% {
         color: var(--white);
