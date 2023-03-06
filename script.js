@@ -188,6 +188,8 @@ const gameController = ((player1, player2) => {
         game.addPlayers(player1, player2);
         game.setupBoard();
         game.renderBoard();
+        console.log("Players: ");
+        console.log(players);
     }
 
     const setupBoard = () => {
@@ -226,6 +228,7 @@ const gameController = ((player1, player2) => {
 
     //make a "hidden" div appear with the winning player
     const renderWinLoss = (winnerID) => {
+        //display winning player name
        let winMessage = document.querySelector("#win-msg > h2");
 
        if(winnerID != 3) {
@@ -239,16 +242,10 @@ const gameController = ((player1, player2) => {
        winMessage.style.animation = "2s anim-popin 100ms ease forwards";
        winMessage.style.display = "inline";
 
-       players[winnerID - 1] += 1;
-       let winnerScore = null;
-       if(winnerID == 1) {
-        winnerScore = document.querySelector("player-card player1 > p");
+       if(winnerID != 3) {
+            let winnerScore = document.getElementsByClassName("player-card")[winnerID - 1].children[3];
+            winnerScore.innerText = players[winnerID - 1].score + " points";
        }
-       else if(winnerID == 2) {
-        winnerScore = document.querySelector("player-card player2 > p");
-       }
-
-       winnerScore.textContent = (players[winnerID - 1]).toString();
     }
 
     return {
